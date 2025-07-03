@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  directUrl  = env("DIRECT_URL")
+}
+
+model Wallet {
+  id         String     @id @default(uuid())
+  address    String     @unique
+  ownerName  String?
+  createdAt  DateTime   @default(now())
+}
+
+model Contract {
+  id               String       @id @default(uuid())
+  contractCode     String       @unique
+  title            String
+  description      String?
+  amount           Decimal      @db.Decimal(20, 2)
+  currency         String       @default("XLM")
+  status           String       @default("pending")
+  senderAddress    String
+  receiverAddress  String
+  dueDate          DateTime?
+  counterparty     String?
+  method           String       @default("Manual")
+  startDate        DateTime?
+  endDate          DateTime?
+  createdAt        DateTime     @default(now())
+
+  milestones       Milestone[]
+  transaction      StellarTransaction?  @relation("ContractTransaction", fields: [transactionId], references: [id])
+  transactionId    String?              @unique 
+}
+
+model Milestone {
+  id               String       @id @default(uuid())
+  contract         Contract     @relation(fields: [contractId], references: [id], onDelete: Cascade)
+  contractId       String
+  name             String
+  description      String?
+  dueDate          DateTime?
+  sequence         Int?
+  status           String       @default("pending")
+  createdAt        DateTime     @default(now())
+
+  transaction      StellarTransaction?  @relation("MilestoneTransaction", fields: [transactionId], references: [id])
+  transactionId    String?              @unique 
+}
+
+model StellarTransaction {
+  id              String     @id @default(uuid())
+  txHash          String     @unique
+  amount          Decimal?   @db.Decimal(20, 7)
+  assetCode       String?
+  senderAddress   String?
+  receiverAddress String?
+  confirmedAt     DateTime?
+  createdAt       DateTime   @default(now())
+
+  contract        Contract?  @relation("ContractTransaction")
+  milestone       Milestone? @relation("MilestoneTransaction")
+}
