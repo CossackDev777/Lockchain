@@ -15,7 +15,12 @@ type NavItem = {
   isScroll?: boolean;
   isExternal?: boolean;
 };
-
+type AuthItem = {
+  name: string;
+  path: string;
+  isScroll?: boolean;
+  isExternal?: boolean;
+};
 const marketingNavItems: NavItem[] = [
   { name: "Features", path: "/#features", isScroll: true },
   {
@@ -23,8 +28,13 @@ const marketingNavItems: NavItem[] = [
     path: "https://docs.lockup.finance",
     isExternal: true,
   },
-  { name: "Support", path: "/support" },
+  { name: "Support", path: "/support" }
 ];
+const authNavItems: AuthItem[] = [
+  { name: "Login", path: "/login" },
+  { name: "Signup", path: "/signup" }
+];
+
 
 export function AppHeader() {
   const pathname = usePathname();
@@ -149,8 +159,7 @@ export function AppHeader() {
                 />
               </button>
             </div>
-
-            <div className="absolute inset-0 m-auto hidden size-fit lg:block">
+            <div>
               <ul className="flex gap-8 text-sm font-medium">
                 {marketingNavItems.map((item, index) => (
                   <li key={index}>{renderNavItem(item)}</li>
@@ -158,23 +167,7 @@ export function AppHeader() {
               </ul>
             </div>
 
-            <div
-              className={cn(
-                "bg-[#0B0F19]/95 backdrop-blur-xl mb-6 w-full flex-wrap items-center justify-end space-y-8 rounded-xl border border-white/10 p-6 shadow-2xl md:flex-nowrap lg:m-0 lg:flex lg:w-fit lg:gap-6 lg:space-y-0 lg:border-transparent lg:bg-transparent lg:p-0 lg:shadow-none",
-                menuState ? "block" : "hidden",
-                "lg:flex"
-              )}
-            >
-              <div className="lg:hidden w-full">
-                <ul className="space-y-6 text-base">
-                  {marketingNavItems.map((item, index) => (
-                    <li key={index} className="w-full">
-                      {renderNavItem(item, true)}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
+            <div>
               <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit">
                 <button
                   onClick={() => router.push("/contracts")}
@@ -185,8 +178,16 @@ export function AppHeader() {
                 </button>
               </div>
             </div>
-          </div>
+            <div>
+              <ul className="flex gap-8 text-sm font-medium">
+                {authNavItems.map((item, index) => (
+                  <li key={index}>{renderNavItem(item)}</li>
+                ))}
+              </ul>
+            </div>
         </div>
+          </div>
+          
       </nav>
     </header>
   );
