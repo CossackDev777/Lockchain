@@ -87,7 +87,7 @@ export default function RootLayout({
       <body
         className={`${inter.className} overflow-x-hidden bg-grid-pattern bg-brand-background text-white`}
       >
-        <WalletProvider>{children}</WalletProvider>
+        {/* <WalletProvider>{children}</WalletProvider> */}
       </body>
     </html>
   );
